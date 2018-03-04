@@ -8,11 +8,14 @@ public class TextController : MonoBehaviour {
 	public Text text;
 	public int introCount = 0;
 	string[] introMessage = new string[3];
-	private enum Items {pouch, wand, timeturner, mirror, freedom};
+	private enum States {pouch, wand, timeturner, mirror, freedom, cell, intro};
+	private States myState; 
 
 	// Use this for initialization
 	void Start () 
 	{
+		myState = States.intro;
+
 		introMessage[0] = "You're in a windowless prison cell fortified with sound-proof enchantments. " +
 			"Your only reprieve from the tireless Dementor guards is your secret capability: \n" +
 			"\nYou are an animagus. At will, you can turn into a hawk. \n \n" +
@@ -34,15 +37,25 @@ public class TextController : MonoBehaviour {
 			"\nPay attention. You must hurry.\n";
 
 		text.text = "Press the space bar.";
+
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		if(Input.GetKeyDown(KeyCode.Space) && introCount < 3)
+		state_cell ();
+	}
+
+	void state_cell () {
+		if(introCount < 3 && Input.GetKeyDown(KeyCode.Space))
 		{
 			text.text = introMessage[introCount];
 			introCount++;
+		}
+
+		if(introCount == 3 && myState == States.intro){
+			text.text = "IN CELL STATE";
+			myState = States.cell;
 		}
 	}
 }
